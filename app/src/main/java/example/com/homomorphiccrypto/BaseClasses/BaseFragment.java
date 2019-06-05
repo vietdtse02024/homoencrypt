@@ -55,39 +55,7 @@ public class BaseFragment extends Fragment {
 
 
     protected void getPersonDataFromServer() {
-        d.show();
-        ApiHelper.getPersonData(getActivity(), new iNWCallback() {
-            @Override
-            public void onSuccess(String result) {
-                d.dismiss();
 
-                try {
-                    if ("EXISTED".equals(result)) {
-                        ((HomeActivity) getActivity()).navigationView.setSelectedItemId(R.id.nav_result);
-                    } else {
-                        JSONObject obj = new JSONObject(result);
-                        JSONArray arrayDatas = (JSONArray) obj.get("data");
-                        for (int i = 0; i < arrayDatas.length(); i++) {
-                            JSONObject jb = arrayDatas.getJSONObject(i);
-                            Person person = new Person();
-                            person.setId(jb.getInt("ID"));
-                            person.setDescription(jb.getString("CONTENT"));
-                            personList.add(person);
-                        }
-                        PersonAdapter adapter = new PersonAdapter(getActivity(), personList);
-                        recyclerView.setAdapter(adapter);
-                    }
-                } catch (Exception ex) {
-                    Toast.makeText(getActivity(), "error: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailed(String error) {
-                d.dismiss();
-                Log.e("", "Get person data failed: " + error);
-            }
-        });
     }
 
     protected void getResultDataFromServer() {
