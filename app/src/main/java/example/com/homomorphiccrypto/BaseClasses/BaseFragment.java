@@ -62,21 +62,16 @@ public class BaseFragment extends Fragment {
                 d.dismiss();
 
                 try {
-                    ApiCrypter apiCrypter = new ApiCrypter();
-                    String decryptData = new String( apiCrypter.decrypt(result));
-                    if ("EXISTED".equals(decryptData)) {
+                    if ("EXISTED".equals(result)) {
                         ((HomeActivity) getActivity()).navigationView.setSelectedItemId(R.id.nav_result);
                     } else {
-                        JSONObject obj = new JSONObject(decryptData);
+                        JSONObject obj = new JSONObject(result);
                         JSONArray arrayDatas = (JSONArray) obj.get("data");
                         for (int i = 0; i < arrayDatas.length(); i++) {
                             JSONObject jb = arrayDatas.getJSONObject(i);
                             Person person = new Person();
-                            person.setId(jb.getInt("PERSON_ID"));
-                            person.setName(jb.getString("FULL_NAME") + "-" + jb.getString("BIRTH_DATE"));
-                            person.setAddress(jb.getString("ADDRESS"));
-                            person.setImgUrl(jb.getString("IMAGE_URL"));
-                            person.setDescription(jb.getString("DESCRIPTION"));
+                            person.setId(jb.getInt("ID"));
+                            person.setDescription(jb.getString("CONTENT"));
                             personList.add(person);
                         }
                         PersonAdapter adapter = new PersonAdapter(getActivity(), personList);
@@ -102,16 +97,14 @@ public class BaseFragment extends Fragment {
             public void onSuccess(String result) {
                 d.dismiss();
                 try {
-                    ApiCrypter apiCrypter = new ApiCrypter();
-                    String decryptData = new String( apiCrypter.decrypt(result));
-                    JSONObject obj = new JSONObject(decryptData);
+                    JSONObject obj = new JSONObject(result);
                     JSONArray arrayDatas = (JSONArray) obj.get("data");
                     int totalCount = obj.getInt("total");
-                    for (int i = 0; i < arrayDatas.length(); i++) {
+                    /*for (int i = 0; i < arrayDatas.length(); i++) {
                         JSONObject jb = arrayDatas.getJSONObject(i);
-                        personList.add(new Person(jb.getInt("PERSON_ID"), jb.getString("FULL_NAME") + "-" + jb.getString("BIRTH_DATE"),
-                                jb.getString("ADDRESS"), jb.getString("IMAGE_URL"), jb.getInt("RESULT") + "/" + totalCount));
-                    }
+                        *//*personList.add(new Person(jb.getInt("PERSON_ID"), jb.getString("FULL_NAME") + "-" + jb.getString("BIRTH_DATE"),
+                                jb.getString("ADDRESS"), jb.getString("IMAGE_URL"), jb.getInt("RESULT") + "/" + totalCount));*//*
+                    }*/
                 } catch (Exception ex) {
                     Toast.makeText(getActivity(), "error: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
                 }

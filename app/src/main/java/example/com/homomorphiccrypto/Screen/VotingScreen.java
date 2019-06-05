@@ -22,6 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import example.com.homomorphiccrypto.BaseClasses.BaseFragment;
 import example.com.homomorphiccrypto.HomomotphicCrypto.ApiCrypter;
+import example.com.homomorphiccrypto.HomomotphicCrypto.Elgamal;
 import example.com.homomorphiccrypto.Main.HomeActivity;
 import example.com.homomorphiccrypto.Network.ApiHelper;
 import example.com.homomorphiccrypto.Network.iNWCallback;
@@ -81,12 +82,10 @@ public class VotingScreen extends BaseFragment {
         try {
             String params = new Gson().toJson(personList).toString();
             Log.e("Origin params: ", params);
-            ApiCrypter apiCrypter = new ApiCrypter();
+            Elgamal elgamal = new Elgamal();
             /* Encrypt */
-            String encryptData = ApiCrypter.bytesToHex( apiCrypter.encrypt(params));
-            Log.e("Encrypt Data: ", encryptData);
 
-            ApiHelper.sendVotingData(getActivity(), encryptData, new iNWCallback() {
+            /*ApiHelper.sendVotingData(getActivity(), params, new iNWCallback() {
                 @Override
                 public void onSuccess(String result) {
                     Log.e("", "SEND VOTING SUCCESS");
@@ -98,7 +97,7 @@ public class VotingScreen extends BaseFragment {
                 public void onFailed(String error) {
                     Log.e("", "SEND VOTING FAILED: " + error);
                 }
-            });
+            });*/
         } catch (Exception ex) {
             Log.e("", "SEND VOTING FAILED: " + ex.getMessage(), ex);
         }

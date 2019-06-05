@@ -36,7 +36,7 @@ public class ApiHelper {
             return;
         }
         String deviceId = new InfoDevices().getInfo();
-        String URL  = ApiEndPoint.URL_GET_PERSON_DATA + "?deviceId=" + deviceId;
+        String URL  = ApiEndPoint.URL_GET_QUESTION_DATA + "?deviceId=" + deviceId;
         AndroidNetworking.get(URL)
                 .build()
                 .getAsString(new StringRequestListener() {
