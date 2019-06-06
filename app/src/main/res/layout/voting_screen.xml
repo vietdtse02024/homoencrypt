@@ -35,12 +35,13 @@
 
         <Button
             android:id="@+id/btGetQuestion"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="30dp"
-            android:text="Lấy câu hỏi"
-            android:textColor="@color/colorPrimary" />
+            android:text="Nhận thông tin"
+            android:textColor="@android:color/white"
+            android:theme="@style/Facebook.Button"/>
 
         <LinearLayout
             android:id="@+id/lnlQuestion"
@@ -56,10 +57,10 @@
                 android:gravity="center"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:text="fewnkfnewkfnekwbkewvbkewvjbkjwbvjkwvbjkwvbjkwevbwkejvbwjkevbwjkevbejkwvbejkwvbjkwvbkejwvbjwekvbwekjvbekwj"
                 android:textSize="16sp" />
 
             <LinearLayout
+                android:id="@+id/lnlButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
@@ -67,21 +68,42 @@
 
                 <Button
                     android:id="@+id/btYes"
-                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    style="@style/Widget.AppCompat.Button.Colored"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Có"
-                    android:textColor="@android:color/holo_green_dark" />
+                    android:textColor="@android:color/white"
+                    android:theme="@style/Button.Red" />
 
                 <Button
                     android:id="@+id/btNo"
-                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    style="@style/Widget.AppCompat.Button.Colored"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Không"
-                    android:textColor="@android:color/holo_red_dark" />
+                    android:textColor="@android:color/white"
+                    android:theme="@style/Button.Green" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lnlResult"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvResult"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Bạn đã bỏ phiếu thành công."
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
 

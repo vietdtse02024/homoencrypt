@@ -79,7 +79,7 @@ public class ApiHelper {
             callback.onFailed("No internet access");
             return;
         }
-        String deviceId = new InfoDevices().getId();
+        String deviceId = new InfoDevices().getInfo();
         String URL  = ApiEndPoint.URL_SEND_VOTING_DATA;
         AndroidNetworking.post(URL)
                 .addBodyParameter("params", params)

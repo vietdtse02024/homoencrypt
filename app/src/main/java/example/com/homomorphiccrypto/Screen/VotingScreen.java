@@ -1,12 +1,8 @@
 package example.com.homomorphiccrypto.Screen;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,19 +16,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.logging.Logger;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import example.com.homomorphiccrypto.Adapter.PersonAdapter;
 import example.com.homomorphiccrypto.BaseClasses.BaseFragment;
-import example.com.homomorphiccrypto.HomomotphicCrypto.ApiCrypter;
 import example.com.homomorphiccrypto.HomomotphicCrypto.Elgamal;
 import example.com.homomorphiccrypto.Main.HomeActivity;
 import example.com.homomorphiccrypto.Model.Person;
@@ -54,8 +43,18 @@ public class VotingScreen extends BaseFragment {
     Button btNo;
     @BindView(R.id.lnlQuestion)
     LinearLayout lnlQuestion;
+
+    @BindView(R.id.lnlButton)
+    LinearLayout lnlButton;
+
+    @BindView(R.id.lnlResult)
+    LinearLayout lnlResult;
+
     @BindView(R.id.tvQuestion)
     TextView tvQuestion;
+
+    @BindView(R.id.tvResult)
+    TextView tvResult;
 
     @Nullable
     @Override
@@ -68,11 +67,9 @@ public class VotingScreen extends BaseFragment {
     }
 
     private void initLayout() {
-        toolbar.setTitle("Bầu cử tri");
+        toolbar.setTitle("Bỏ phiếu");
         ((HomeActivity) getActivity()).setSupportActionBar(toolbar);
-
         lnlQuestion.setVisibility(View.GONE);
-
         btGetQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,14 +96,15 @@ public class VotingScreen extends BaseFragment {
 
     private void getVotingData() {
         d.show();
-        personList = new ArrayList<>();
         ApiHelper.getPersonData(getActivity(), new iNWCallback() {
             @Override
             public void onSuccess(String result) {
                 d.dismiss();
+                lnlQuestion.setVisibility(View.VISIBLE);
                 try {
                     if ("EXISTED".equals(result)) {
-                        ((HomeActivity) getActivity()).navigationView.setSelectedItemId(R.id.nav_result);
+                        lnlButton.setVisibility(View.INVISIBLE);
+                        lnlResult.setVisibility(View.VISIBLE);
                     } else {
                         JSONObject obj = new JSONObject(result);
                         Log.e("TAG", "json: " + obj.toString());
@@ -118,7 +116,10 @@ public class VotingScreen extends BaseFragment {
                             person.setDescription(jb.getString("CONTENT"));
                             displayQuestion(person);
                         }
-                        Log.e("TAG", "" + personList.size());
+                        if (arrayDatas.length() > 0) {
+                            lnlButton.setVisibility(View.VISIBLE);
+                            lnlResult.setVisibility(View.INVISIBLE);
+                        }
                     }
                 } catch (Exception ex) {
                     Toast.makeText(getActivity(), "error: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -134,59 +135,44 @@ public class VotingScreen extends BaseFragment {
     }
 
     private void displayQuestion(Person person){
-        lnlQuestion.setVisibility(View.VISIBLE);
+
         tvQuestion.setText(person.getDescription());
+        final int questionId = person.getId();
         btYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendAnswer(1);
+                sendVotingData(questionId, 1);
             }
         });
 
         btNo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendAnswer(0);
+                sendVotingData(questionId, 0);
             }
         });
     }
 
-    private void sendAnswer(int b){
-        //call api
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("Bạn đã thực hiện xong");
-        builder.setCancelable(false);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        builder.show();
-    }
-
-
-    private void sendVotingData() {
+    private void sendVotingData(int questionId, int value) {
         try {
-            String params = new Gson().toJson(personList).toString();
-            Log.e("Origin params: ", params);
-            Elgamal elgamal = new Elgamal();
-            /* Encrypt */
+            JSONObject obj = new JSONObject();
 
-            /*ApiHelper.sendVotingData(getActivity(), params, new iNWCallback() {
+            Elgamal elgamal = new Elgamal();
+            obj.put("questionId", questionId);
+            obj.put("value", elgamal.encrypt(value));
+            ApiHelper.sendVotingData(getActivity(), obj.toString(), new iNWCallback() {
                 @Override
                 public void onSuccess(String result) {
                     Log.e("", "SEND VOTING SUCCESS");
-                    //change page to result
-                    ((HomeActivity) getActivity()).navigationView.setSelectedItemId(R.id.nav_result);
+                    lnlButton.setVisibility(View.INVISIBLE);
+                    lnlResult.setVisibility(View.VISIBLE);
                 }
 
                 @Override
                 public void onFailed(String error) {
                     Log.e("", "SEND VOTING FAILED: " + error);
                 }
-            });*/
+            });
         } catch (Exception ex) {
             Log.e("", "SEND VOTING FAILED: " + ex.getMessage(), ex);
         }

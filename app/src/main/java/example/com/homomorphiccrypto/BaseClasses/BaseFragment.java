@@ -59,34 +59,7 @@ public class BaseFragment extends Fragment {
     }
 
     protected void getResultDataFromServer() {
-        d.show();
-        ApiHelper.getResultData(getActivity(), new iNWCallback() {
-            @Override
-            public void onSuccess(String result) {
-                d.dismiss();
-                try {
-                    JSONObject obj = new JSONObject(result);
-                    JSONArray arrayDatas = (JSONArray) obj.get("data");
-                    int totalCount = obj.getInt("total");
-                    /*for (int i = 0; i < arrayDatas.length(); i++) {
-                        JSONObject jb = arrayDatas.getJSONObject(i);
-                        *//*personList.add(new Person(jb.getInt("PERSON_ID"), jb.getString("FULL_NAME") + "-" + jb.getString("BIRTH_DATE"),
-                                jb.getString("ADDRESS"), jb.getString("IMAGE_URL"), jb.getInt("RESULT") + "/" + totalCount));*//*
-                    }*/
-                } catch (Exception ex) {
-                    Toast.makeText(getActivity(), "error: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
-                }
 
-                ResultAdapter adapter = new ResultAdapter(getActivity(), personList);
-                recyclerView.setAdapter(adapter);
-            }
-
-            @Override
-            public void onFailed(String error) {
-                d.dismiss();
-                Log.e("", "Get person data failed: " + error);
-            }
-        });
     }
 
     public String getMacAdress(Context ctx) {
