@@ -103,7 +103,7 @@ public class VotingScreen extends BaseFragment {
                 lnlQuestion.setVisibility(View.VISIBLE);
                 try {
                     if ("EXISTED".equals(result)) {
-                        lnlButton.setVisibility(View.INVISIBLE);
+                        lnlButton.setVisibility(View.GONE);
                         lnlResult.setVisibility(View.VISIBLE);
                     } else {
                         JSONObject obj = new JSONObject(result);
@@ -116,9 +116,14 @@ public class VotingScreen extends BaseFragment {
                             person.setDescription(jb.getString("CONTENT"));
                             displayQuestion(person);
                         }
-                        if (arrayDatas.length() > 0) {
+                        String typeData = obj.getString("type");
+                        if (arrayDatas.length() > 0 && "DATA".equals(typeData)) {
                             lnlButton.setVisibility(View.VISIBLE);
-                            lnlResult.setVisibility(View.INVISIBLE);
+                            lnlResult.setVisibility(View.GONE);
+                        } else {
+                            lnlButton.setVisibility(View.GONE);
+                            lnlResult.setVisibility(View.VISIBLE);
+                            tvResult.setText("Đã hết thời gian bỏ phiếu.");
                         }
                     }
                 } catch (Exception ex) {
@@ -164,8 +169,13 @@ public class VotingScreen extends BaseFragment {
                 @Override
                 public void onSuccess(String result) {
                     Log.e("", "SEND VOTING SUCCESS");
-                    lnlButton.setVisibility(View.INVISIBLE);
+                    lnlButton.setVisibility(View.GONE);
                     lnlResult.setVisibility(View.VISIBLE);
+                    if("TIMEOUT".equals(result)) {
+                        tvResult.setText("Đã hết thời gian bỏ phiếu.");
+                    } else {
+                        tvResult.setText("Bạn đã bỏ phiếu thành công.");
+                    }
                 }
 
                 @Override

@@ -60,14 +60,24 @@ public class ResultScreen extends BaseFragment {
                     } else {
                         JSONObject obj = new JSONObject(result);
                         //JSONArray arrayDatas = (JSONArray) obj.get("data");
-                        int totalCount = obj.getInt("total");
-                        BigInteger voteResult = new BigInteger(obj.getString("data"));
+                        //int totalCount = obj.getInt("total");
+                        BigInteger voteResult = BigInteger.ONE;
                         Elgamal elgamal = new Elgamal();
+                        JSONArray voteResults = (JSONArray) obj.get("data");
+                        for (int i = 0; i < voteResults.length(); i++) {
+                            JSONObject jb = voteResults.getJSONObject(i);
+                            String [] value = jb.getString("VALUE").split(",");
+                            BigInteger x = new BigInteger(value[0]);
+                            BigInteger y = new BigInteger(value[1]);
+                            //BigInteger encrypt  = y.divide(x.pow(elgamal.secretKey));
+                            voteResult = voteResult.multiply(y.divide(x.pow(elgamal.secretKey)));
+                        }
+
                         Double resultDecrypt = elgamal.decrypt(voteResult.doubleValue());
-                        tvResult.setText("Kết quả: " + resultDecrypt.intValue() + " đồng ý/tổng số: " + totalCount);
-                        JSONArray arrayDatas = (JSONArray) obj.get("array");
-                        for (int i = 0; i < arrayDatas.length(); i++) {
-                            JSONObject jb = arrayDatas.getJSONObject(i);
+                        tvResult.setText("Kết quả: " + resultDecrypt.intValue() + " đồng ý/tổng số: " +  voteResults.length());
+                        JSONArray questions = (JSONArray) obj.get("question");
+                        for (int i = 0; i < questions.length(); i++) {
+                            JSONObject jb = questions.getJSONObject(i);
                             tvQuestion.setText(jb.getString("CONTENT"));
                         }
                     }

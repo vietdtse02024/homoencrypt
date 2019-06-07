@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class Elgamal {
     BigInteger g = new BigInteger("6");
-    int secretKey = 12;
+    public int secretKey = 12;
     BigInteger h;
     public String encrypt(int value) {
         h = g.pow(secretKey);
