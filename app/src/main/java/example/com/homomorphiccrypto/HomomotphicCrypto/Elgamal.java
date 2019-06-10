@@ -17,7 +17,12 @@ public class Elgamal {
         //return y.divide(x.pow(secretKey));
     }
 
-    public Double decrypt(double value) {
+    public int decrypt(BigInteger x, BigInteger y) {
+        BigInteger value = y.divide(x.pow(secretKey));
+        return log(value.doubleValue()).intValue();
+    }
+
+    public Double log(double value) {
         return Math.log(value)/Math.log(g.doubleValue());
     }
 
